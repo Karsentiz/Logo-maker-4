@@ -1,14 +1,21 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+  publish = "out"
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NEXT_PRIVATE_TARGET = "server"
+  NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [[edge_functions]]
   function = "api/*"
-  path = "/api/*" 
+  path = "/api/*"
+
+# Handle 404s
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 
