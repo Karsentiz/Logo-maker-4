@@ -64,18 +64,9 @@ export default function LogoForm() {
     setError(null)
 
     try {
-      console.log('Checking environment...')
-      const envCheck = await fetch('/api/check-env')
-      const envData = await envCheck.json()
-      console.log('Environment check:', envData)
-
-      if (!envData.huggingface_key_present) {
-        throw new Error('Hugging Face API key is not configured')
-      }
-
-      console.log('Submitting request to generate logo...')
-      const response = await fetch('/api/generate', {
-        method: 'POST',
+      console.log("Submitting request to generate logo...");
+      const response = await fetch("/api/generate", {
+        method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
