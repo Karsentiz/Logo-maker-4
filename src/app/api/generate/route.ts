@@ -17,10 +17,8 @@ function formatPrompt(companyName: string, description: string): string {
   return prompt
 }
 
-export const config = {
-  runtime: 'edge',
-  regions: ['iad1'], // this helps ensure consistent performance
-}
+export const runtime = 'edge'
+export const preferredRegion = ['iad1']
 
 export async function POST(request: Request) {
   try {
