@@ -17,6 +17,9 @@ function formatPrompt(companyName: string, description: string): string {
   return prompt
 }
 
+export const runtime = "edge";
+export const preferredRegion = ["iad1"];
+
 export async function POST(request: Request) {
   console.log('API Route - Starting request processing')
   try {
