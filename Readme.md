@@ -46,73 +46,45 @@ This project generates logos using the Hugging Face API.
 
 ## Firebase Setup
 
+**Install the Firebase CLI:**
+
+```sh
+npm install -g firebase-tools
+```
+
+**Login to Firebase:**
+
+```sh
+firebase login
+```
+
 ### Firebase Environment Variables
 
 To deploy using Firebase, you need to add your Hugging Face API key as a secret in Firebase:
 
-1. Install the Firebase CLI if you haven't already:
+Set your Hugging Face API key as a secret:
 
-   ```sh
-   npm install -g firebase-tools
-   ```
-
-2. Log in to Firebase:
-
-   ```sh
-   firebase login
-   ```
-
-3. Set your Hugging Face API key as a secret:
-
-   ```sh
-   firebase functions:secrets:set HUGGINGFACE_API_KEY
-   ```
-
-4. Deploy your functions:
-
-   ```sh
-   firebase deploy --only functions
-   ```
+    ```sh
+    firebase functions:secrets:set HUGGINGFACE_API_KEY
+    ```
 
 ### Enable Firebase Experiments
 
 To use the latest Firebase features for web frameworks, you need to enable Firebase experiments:
 
-1. **Enable Firebase experiments:**
+    ```sh
+    firebase experiments:enable webframeworks
+    ```
 
-   ```sh
-   firebase experiments:enable webframeworks
-   ```
-
-   This command enables experimental features in Firebase that support web frameworks, providing better integration and new capabilities for your project.
+This command enables experimental features in Firebase that support web frameworks, providing better integration and new capabilities for your project.
 
 ## Deployment
 
-To deploy this project using Firebase, follow these steps:
+To deploy this project using Firebase, run this:
 
-1. **Install the Firebase CLI:**
-
-   ```sh
-   npm install -g firebase-tools
-   ```
-
-2. **Login to Firebase:**
-
-   ```sh
-   firebase login
-   ```
-
-3. **Build the project:**
-
-   ```sh
-   npm run build
-   ```
-
-4. **Deploy to Firebase:**
-
-   ```sh
-   firebase deploy
-   ```
+```sh
+npm run deploy
+```
 
 ### Automatic Deployment
 
