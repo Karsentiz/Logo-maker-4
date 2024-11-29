@@ -100,15 +100,25 @@ To deploy using Firebase, you need to add your Hugging Face API key as a secret 
    firebase deploy --only functions
    ```
 
-### GitHub Actions Environment Variables
+### Automatic Deployment
 
-To deploy using GitHub Actions, you need to add your Hugging Face API key as a secret in your GitHub repository:
+To set up automatic deployment every time you push to the `main` branch, follow these steps:
 
-1. Go to your repository on GitHub.
-2. Click on `Settings`.
-3. Click on `Secrets` in the left sidebar.
-4. Click on `New repository secret`.
-5. Add a new secret with the name `HUGGINGFACE_API_KEY` and your Hugging Face API key as the value.
+1. **Generate a Firebase CI token:**
+
+   ```sh
+   firebase login:ci
+   ```
+
+   Copy the generated token.
+
+2. **Add the Firebase token as a GitHub secret:**
+
+   1. Go to your repository on GitHub.
+   2. Click on `Settings`.
+   3. Click on `Secrets` in the left sidebar.
+   4. Click on `New repository secret`.
+   5. Add a new secret with the name `FIREBASE_TOKEN` and the token you copied as the value.
 
 ## License
 
