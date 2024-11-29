@@ -17,9 +17,6 @@ function formatPrompt(companyName: string, description: string): string {
   return prompt
 }
 
-export const runtime = 'edge'
-export const preferredRegion = ['iad1']
-
 export async function POST(request: Request) {
   try {
     // Validate request body
@@ -27,13 +24,26 @@ export async function POST(request: Request) {
     try {
       body = await request.json()
     } catch (e) {
-      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+      console.error('Invalid request body:', e)
+      return new NextResponse(
+        JSON.stringify({ error: 'Invalid request body' }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
     }
 
     const { companyName, description } = body
     
     if (!companyName || !description) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return new NextResponse(
+        JSON.stringify({ error: 'Missing required fields' }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
     }
 
     console.log('Request data:', { companyName, description })
@@ -46,33 +56,40 @@ export async function POST(request: Request) {
       try {
         console.log(`Attempt ${retries + 1} - Sending request to Hugging Face API...`)
         
-        // Make the API request
-        const response = await fetch(
-          "https://api-inference.huggingface.co/models/prithivMLmods/Flux-Dalle-Mix-LoRA",
-          {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-              "Content-Type": "application/json",
-              "Accept": "image/*, application/json", // Explicitly accept both image and JSON
-            },
-            body: JSON.stringify({
-              inputs: prompt
-            }),
-          }
-        )
+        const apiUrl = "https://api-inference.huggingface.co/models/prithivMLmods/Flux-Dalle-Mix-LoRA"
+        console.log('API URL:', apiUrl)
+
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+            "Content-Type": "application/json",
+            "Accept": "image/*, application/json",
+          },
+          body: JSON.stringify({
+            inputs: prompt
+          }),
+        })
 
         const contentType = response.headers.get("content-type") || ''
         console.log('Response details:', {
           status: response.status,
           statusText: response.statusText,
-          contentType
+          contentType,
+          headers: Object.fromEntries(response.headers.entries())
         })
 
         // Handle non-200 responses
         if (!response.ok) {
           const text = await response.text()
           console.log('Error response text:', text)
+          console.log('Response headers:', response.headers)
+
+          // Check if response is HTML
+          if (text.trim().startsWith('<!DOCTYPE')) {
+            console.error('Received HTML response instead of JSON/image')
+            throw new Error('Invalid API response format')
+          }
 
           let errorMessage
           try {
@@ -96,6 +113,7 @@ export async function POST(request: Request) {
 
         // Handle successful response
         if (!contentType.includes('image')) {
+          console.error('Unexpected content type:', contentType)
           throw new Error('Received non-image response from API')
         }
 
@@ -131,7 +149,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error generating logo:', error)
     
-    // Ensure we always return a proper JSON response
     return new NextResponse(
       JSON.stringify({
         error: error instanceof Error ? error.message : 'Failed to generate logo'

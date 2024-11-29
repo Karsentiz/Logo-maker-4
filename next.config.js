@@ -1,11 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    unoptimized: true,
+  },
   output: 'export',
   images: {
     unoptimized: true,
   },
-  // Required for static export
+  experimental: {
+    appDir: true,
+  },
   trailingSlash: true,
+  staticPageGenerationTimeout: 1000,
 }
 
 module.exports = nextConfig 
